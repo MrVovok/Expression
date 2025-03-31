@@ -10,21 +10,21 @@ using namespace std;
 class Expression
 {
 public:
-	//конструкторы
+	//constructors
 	Expression(string expressionStr) : expressionStr(expressionStr)
 	{
 		set_expr(expressionStr);
 	}
 	Expression() : expressionStr(""), expressionVec(NULL) {}
 
-	//основные функции
+	//main methods
 	double solve();
 	Expression& multiply(double num);
 	Expression& divide(double num);
 	Expression& subtract(double num);
 	Expression& add(double num);
 
-	//операторы
+	//operators
 	bool operator== (Expression expr) {
 		return solve() == expr.solve();
 	}
@@ -32,18 +32,18 @@ public:
 		return solve() != expr.solve();
 	}
 
-	//сеттеры
+	//setters
 	void set_expr(string exprStr);
 	void set_value(int index, string val) { expressionVec[index] = val; }
 
-	//геттеры
+	//getters
 	int size()                    { return expressionVec.size(); }
 	string at(int index)          { return expressionVec[index]; }
 	string get_string()           { return expressionStr; }
 	vector<string> get_vector()   { return expressionVec; }
 	vector<string> get_brackets() { return brackets; }
 
-	//принты
+	//print methods
 	void print_vector() {
 		for (string el : expressionVec) {
 			printf("[%s] ", el.c_str());
@@ -60,11 +60,11 @@ public:
 	}
 
 private:
-	string expressionStr;         //строковая запись выражения
-	vector<string> expressionVec; //разбитое на части выражение
-	vector<string> brackets;      //содержимое в скобках
+	string expressionStr;         //string expression
+	vector<string> expressionVec; //divided into parts expression
+	vector<string> brackets;      //content in brackets
 
-	//внутренние методы
+	//local methods
 	void clean_vector();
 	bool is_operator(string symbol);
 	bool is_number(string symbol);

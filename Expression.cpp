@@ -1,11 +1,8 @@
-﻿// Expression.cpp : Определяет функции для статической библиотеки.
-//
-
-#include "pch.h"
+﻿#include "pch.h"
 #include "framework.h"
 #include "Expression.h"
 
-//основные функции
+//main methods
 double Expression::solve() {
 	for (int i = 0; i < expressionVec.size() - 1; i++) {
 		if (expressionVec[i] == "*") {
@@ -45,7 +42,7 @@ Expression& Expression::multiply(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
 		[num, this](string& element) {
 			if (is_number(element)) element = to_string(stod(element) * num); 
-			element.erase(element.find_last_not_of('0') + 1, string::npos); //чистка нулей
+			element.erase(element.find_last_not_of('0') + 1, string::npos); //cleaning from zeros
 			element.erase(element.find_last_not_of('.') + 1, string::npos); //
 		});
 	return *this;
@@ -54,7 +51,7 @@ Expression& Expression::divide(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
 		[num, this](string& element) {
 			if (is_number(element)) element = to_string(stod(element) / num);
-			element.erase(element.find_last_not_of('0') + 1, string::npos); //чистка нулей
+			element.erase(element.find_last_not_of('0') + 1, string::npos); //cleaning from zeros
 			element.erase(element.find_last_not_of('.') + 1, string::npos); //
 		});
 	return *this;
@@ -63,7 +60,7 @@ Expression& Expression::subtract(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
 		[num, this](string& element) {
 			if (is_number(element)) element = to_string(stod(element) - num);
-			element.erase(element.find_last_not_of('0') + 1, string::npos); //чистка нулей
+			element.erase(element.find_last_not_of('0') + 1, string::npos); //cleaning from zeros
 			element.erase(element.find_last_not_of('.') + 1, string::npos); //
 		});
 	return *this;
@@ -72,13 +69,13 @@ Expression& Expression::add(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
 		[num, this](string& element) {
 			if (is_number(element)) element = to_string(stod(element) + num);
-			element.erase(element.find_last_not_of('0') + 1, string::npos); //чистка нулей
+			element.erase(element.find_last_not_of('0') + 1, string::npos); //cleaning from zeros
 			element.erase(element.find_last_not_of('.') + 1, string::npos); //
 		});
 	return *this;
 }
 
-//сеттеры
+//setters
 void Expression::set_expr(string exprStr) {
 	expressionStr = exprStr;
 	string tmpExprStr;
@@ -108,7 +105,7 @@ void Expression::set_expr(string exprStr) {
 	clean_vector();
 }
 
-//внутренние методы
+//local methods
 void Expression::clean_vector() {
 	auto deleted = remove_if(expressionVec.begin(), expressionVec.end(),
 		[this](string element) {
