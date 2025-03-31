@@ -19,10 +19,10 @@ public:
 
 	//основные функции
 	double solve();
-	Expression multiply(double num);
-	Expression divide(double num);
-	Expression subtract(double num);
-	Expression add(double num);
+	Expression& multiply(double num);
+	Expression& divide(double num);
+	Expression& subtract(double num);
+	Expression& add(double num);
 
 	//операторы
 	bool operator== (Expression expr) {

@@ -41,7 +41,7 @@ double Expression::solve() {
 	}
 	return stod(expressionVec[0]);
 }
-Expression Expression::multiply(double num) {
+Expression& Expression::multiply(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
 		[num, this](string& element) {
 			if (is_number(element)) element = to_string(stod(element) * num); 
@@ -50,7 +50,7 @@ Expression Expression::multiply(double num) {
 		});
 	return *this;
 }
-Expression Expression::divide(double num) {
+Expression& Expression::divide(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
 		[num, this](string& element) {
 			if (is_number(element)) element = to_string(stod(element) / num);
@@ -59,7 +59,7 @@ Expression Expression::divide(double num) {
 		});
 	return *this;
 }
-Expression Expression::subtract(double num) {
+Expression& Expression::subtract(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
 		[num, this](string& element) {
 			if (is_number(element)) element = to_string(stod(element) - num);
@@ -68,7 +68,7 @@ Expression Expression::subtract(double num) {
 		});
 	return *this;
 }
-Expression Expression::add(double num) {
+Expression& Expression::add(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
 		[num, this](string& element) {
 			if (is_number(element)) element = to_string(stod(element) + num);
