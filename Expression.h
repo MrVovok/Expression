@@ -11,14 +11,15 @@ class Expression
 {
 public:
 	//constructors
-	Expression(string expressionStr) : expressionStr(expressionStr)
+	Expression(string exprStr)
 	{
-		set_expr(expressionStr);
+		set_expr(exprStr);
 	}
 	Expression() : expressionStr(""), expressionVec(NULL) {}
 
 	//main methods
 	double solve();
+	double solved();
 	Expression& multiply(double num);
 	Expression& divide(double num);
 	Expression& subtract(double num);

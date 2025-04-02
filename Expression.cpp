@@ -36,7 +36,44 @@ double Expression::solve() {
 			solve();
 		}
 	}
+	//return stod(expressionVec[0]); <- to solved()
 	return stod(expressionVec[0]);
+}
+double Expression::solved() {
+	static vector<string> exprVec(expressionVec);
+	for (int i = 0; i < exprVec.size() - 1; i++) {
+		if (exprVec[i] == "*") {
+			string answer = to_string(stod(exprVec[i - 1]) * stod(exprVec[i + 1]));
+			auto it = exprVec.begin() + (i - 1);
+			exprVec.erase(it, it + 3);
+			exprVec.insert(exprVec.begin() + (i - 1), answer);
+			solved();
+		}
+		else if (exprVec[i] == "/") {
+			string answer = to_string(stod(exprVec[i - 1]) / stod(exprVec[i + 1]));
+			auto it = exprVec.begin() + (i - 1);
+			exprVec.erase(it, it + 3);
+			exprVec.insert(exprVec.begin() + (i - 1), answer);
+			solved();
+		}
+	}
+	for (int i = 0; i < exprVec.size() - 1; i++) {
+		if (exprVec[i] == "+") {
+			string answer = to_string(stod(exprVec[i - 1]) + stod(exprVec[i + 1]));
+			auto it = exprVec.begin() + (i - 1);
+			exprVec.erase(it, it + 3);
+			exprVec.insert(exprVec.begin() + (i - 1), answer);
+			solved();
+		}
+		else if (exprVec[i] == "-") {
+			string answer = to_string(stod(exprVec[i - 1]) - stod(exprVec[i + 1]));
+			auto it = exprVec.begin() + (i - 1);
+			exprVec.erase(it, it + 3);
+			exprVec.insert(exprVec.begin() + (i - 1), answer);
+			solved();
+		}
+	}
+	return stod(exprVec[0]);
 }
 Expression& Expression::multiply(double num) {
 	for_each(expressionVec.begin(), expressionVec.end(),
@@ -77,32 +114,46 @@ Expression& Expression::add(double num) {
 
 //setters
 void Expression::set_expr(string exprStr) {
-	expressionStr = exprStr;
-	string tmpExprStr;
-	for (int i = 0; i <= expressionStr.length(); i++) {
-		if (isdigit(expressionStr[i]) || expressionStr[i] == '.')
-			tmpExprStr += expressionStr[i];
-		else if (expressionStr[i] == '(') {
-			string underExprStr;
-			while (expressionStr[i + 1] != ')') {
-				underExprStr += expressionStr[++i];
-				if (i + 1 == expressionStr.length()) expressionStr += ')';
+	try {
+		expressionStr = exprStr;
+		string tmpExprStr;
+		for (int i = 0; i <= expressionStr.length(); i++) {
+			if (isdigit(expressionStr[i]) || expressionStr[i] == '.')
+				tmpExprStr += expressionStr[i];
+			else if (expressionStr[i] == '(') {
+				string underExprStr;
+				unsigned cnt = 0;
+				while (1) { //expressionStr[i + 1] != ')'
+					underExprStr += expressionStr[++i];
+					switch (expressionStr[i])
+					{
+					case '(': cnt++; break;
+					case ')': cnt--; break;
+					}
+					if (expressionStr[i + 1] == ')' && cnt == 0) break;
+					if (i + 1 == expressionStr.length()) throw "missing ')'";
+					//cout << "cnt: " << cnt << "\n";
+				}
+				brackets.push_back(underExprStr);
+				Expression expression(underExprStr);
+				string ans = to_string(expression.solve());
+				ans.erase(ans.find_last_not_of('0') + 1, string::npos); 
+				ans.erase(ans.find_last_not_of('.') + 1, string::npos); 
+				expressionVec.push_back(ans);
 			}
-			brackets.push_back(underExprStr);
-			Expression expression(underExprStr);
-			string ans = to_string(expression.solve());
-			ans.erase(ans.find_last_not_of('0') + 1, string::npos); //чистка нулей
-			ans.erase(ans.find_last_not_of('.') + 1, string::npos); //
-			expressionVec.push_back(ans);
+			else {
+				expressionVec.push_back(tmpExprStr);
+				tmpExprStr = expressionStr[i];
+				expressionVec.push_back(tmpExprStr);
+				tmpExprStr = "";
+			}
 		}
-		else {
-			expressionVec.push_back(tmpExprStr);
-			tmpExprStr = expressionStr[i];
-			expressionVec.push_back(tmpExprStr);
-			tmpExprStr = "";
-		}
+		clean_vector();
 	}
-	clean_vector();
+	catch (const char* message) {
+		cout << "Error: " << message << "\n";
+		return;
+	}
 }
 
 //local methods
