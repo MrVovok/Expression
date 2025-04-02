@@ -4,37 +4,36 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
 class Expression
 {
 public:
-	//constructors
-	Expression(string exprStr)
-	{
-		set_expr(exprStr);
-	}
-	Expression() : expressionStr(""), expressionVec(NULL) {}
+	//constructors / destructor
+	Expression(string exprStr) { set_expr(exprStr); }
+	Expression()               { set_expr("1-1"); }
+	~Expression()              { delete[] operators; }
 
 	//main methods
 	double solve();
 	double solved();
-	Expression& multiply(double num);
-	Expression& divide(double num);
-	Expression& subtract(double num);
-	Expression& add(double num);
+	Expression& multiply(double);
+	Expression& divide(double);
+	Expression& subtract(double);
+	Expression& add(double);
 
 	//operators
 	bool operator== (Expression expr) {
-		return solve() == expr.solve();
+		return solved() == expr.solve();
 	}
 	bool operator!= (Expression expr) { 
-		return solve() != expr.solve();
+		return solved() != expr.solve();
 	}
 
 	//setters
-	void set_expr(string exprStr);
+	bool set_expr(string);
 	void set_value(int index, string val) { expressionVec[index] = val; }
 
 	//getters
@@ -65,9 +64,16 @@ private:
 	vector<string> expressionVec; //divided into parts expression
 	vector<string> brackets;      //content in brackets
 
+	const short CNT_OF_OPERATORS = 6;
+	const char* operators = new char[CNT_OF_OPERATORS]
+		{'*', '/', '+', '-', '^', '%'};
+
 	//local methods
 	void clean_vector();
-	bool is_operator(string symbol);
-	bool is_number(string symbol);
-	char to_char(string symbol);
+	bool is_operator(string);
+	bool is_operator(char);
+	bool is_number(string);
+	char to_char(string);
+	void do_action(vector<string>&, int, char);
+	void apply_to_all(int, char);
 };
